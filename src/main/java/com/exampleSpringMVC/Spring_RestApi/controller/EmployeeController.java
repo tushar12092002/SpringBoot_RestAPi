@@ -24,6 +24,7 @@ public class EmployeeController {
         this.employeeRepository = employeeRepository;
     }
 
+
     //jackson library is converting java object into json
     @GetMapping(path = "/{Id}")
     public EmployeeEntity getEmployee(@PathVariable(name = "Id") Long id){
@@ -37,8 +38,8 @@ public class EmployeeController {
     }
 
     @PostMapping()
-    public String getPostEmployee(){
-        return "hello from post" ;
+    public EmployeeEntity createNewEmployee(@RequestBody EmployeeEntity inputEmployee){
+        return employeeRepository.save(inputEmployee)  ;
     }
 
     //passing data through request body is left
