@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService {
@@ -24,11 +25,26 @@ public class EmployeeService {
         return mappermapper.map(employee_entity , EmployeeDTO.class);
     }
 
-    public List<EmployeeEntity> getallEmployees() {
-        return employeeRepository.findAll() ;
+    public List<EmployeeDTO> getallEmployees() {
+        List<EmployeeEntity> employeeEntities = employeeRepository.findAll();
+
+        return employeeEntities
+                .stream()
+                .map(employeeEntity -> mappermapper.map(employeeEntity, EmployeeDTO.class))
+                .collect(Collectors.toList());
     }
 
-    public EmployeeEntity createNewEmployee(EmployeeEntity inputEmployee) {
-        return employeeRepository.save(inputEmployee) ;
+
+
+    public EmployeeDTO createNewEmployee(EmployeeDTO inputEmployee) {
+
+        // DTO -> Entity
+        EmployeeEntity employeeEntity = mappermapper.map(inputEmployee, EmployeeEntity.class);
+
+        // Save entity
+        EmployeeEntity savedEntity = employeeRepository.save(employeeEntity);
+
+        // Entity -> DTO
+        return mappermapper.map(savedEntity, EmployeeDTO.class);
     }
 }
